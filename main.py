@@ -2,8 +2,8 @@ from cvoting import voter as V
 from svoting import voter_sv
 
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 
 def ret_shares(num_voters):
     votes = np.random.uniform(0.5, 1, num_voters)
@@ -100,6 +100,59 @@ def bsv(n_v, n_d, quadratic = False):
     return mean, ste
 
 
+def plot_figure(mean_map, ste):
+    # Categorize data
+    mean_cv = [mean_map['cv'], mean_map['cvq']]
+    se_cv = [ste[0], ste[1]]
+    mean_asv = [mean_map['asv'], mean_map['asvq']]
+    se_asv = [ste[2], ste[3]]
+    mean_bsv = [mean_map['bsv'], mean_map['bsvq']]
+    se_bsv = [ste[4], ste[5]]
+
+    # Set up plot
+    x=np.arange(0,2)
+    legend = [Line2D([0], [0], color='lightsalmon', lw='3', label='No QV'),
+              Line2D([0], [0], color='lightskyblue', lw='3', label='With QV'),
+              Line2D([0], [0], marker='o', color='w', label='Mean',
+                     markerfacecolor='black', markersize=7)]
+
+    fig, (ax1, ax2, ax3) = plt.subplots(1,3, sharey=True)
+    fig.suptitle("Mean utility with SE")
+
+    # First subplot
+    ax1.errorbar(x, mean_cv, yerr=se_cv, fmt='o',
+                 ecolor=['lightsalmon', 'lightskyblue'],
+                 elinewidth=3, color="black")
+    ax1.set_xticks([-0.5, 1.5])
+    ax1.set_xticklabels(["", ""])
+    ax1.grid(axis='y', color='silver', linestyle='-')
+    ax1.set_title("CV")
+    ax1.set_ylabel("Utility")
+    ax1.legend(handles=legend, loc='upper left')
+
+    # Second subplot
+    ax2.errorbar(x, mean_asv, yerr=se_asv, fmt='o',
+                 ecolor=['lightsalmon', 'lightskyblue'],
+                 elinewidth=3, color="black")
+    ax2.set_xticks([-0.5, 1.5])
+    ax2.set_xticklabels(["", ""])
+    ax2.grid(axis='y', color='silver', linestyle='-')
+    ax2.set_title("ASV")
+
+    # Third subplot
+    ax3.errorbar(x, mean_bsv, yerr=se_bsv, fmt='o',
+                 ecolor=['lightsalmon', 'lightskyblue'],
+                 elinewidth=3, color="black")
+    ax3.set_xticks([-0.5, 1.5])
+    ax3.set_xticklabels(["", ""])
+    ax3.grid(axis='y', color='silver', linestyle='-')
+    ax3.set_title("BSV")
+
+    # Build figure
+    fig.tight_layout()
+    plt.show()
+
+
 if __name__ == "__main__":
     
     mean_map = {"cv": [], "cvq": [], "asv": [], "asvq": [], "bsv": [], "bsvq": []}
@@ -140,18 +193,5 @@ if __name__ == "__main__":
     mean = list(mean_map.values())
     ste = list(ste_map.values())
     ste = [x + mean[i] for i, x in enumerate(mean)]
-    d_len = len(mean_map.keys())
-    x = np.linspace(0, d_len - 1, d_len)
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    
-    markers = ["o", "v", "*", "s", "D", "^"]
-    keys = list(mean_map.keys())
-
-    for i in range(d_len):
-        ax.errorbar(x[i], mean[i], ste[i], capsize=2, marker = markers[i], color = "black", label = keys[i])
-    
-    ax.set_ylabel("Utility")
-    plt.legend(loc = "upper left")
-    plt.show()
+    plot_figure(mean_map, ste)
