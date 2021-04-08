@@ -1,9 +1,10 @@
 import numpy as np
 import random
 
+
 class voter(object):
 
-    def __init__(self, num_votes, num_candidates, quadratic = False):
+    def __init__(self, num_votes, num_candidates, quadratic=False):
         self.num_candidates = num_candidates
         self.num_votes = num_votes
         self.preference = self.get_preference()

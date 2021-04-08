@@ -1,14 +1,14 @@
 import random
 import numpy as np
-import matplotlib.pyplot as plt
+
 
 class voter_sv(object):
-    def __init__(self, nr_decisions, quadratic = False):
+    def __init__(self, nr_decisions, quadratic=False):
         self.votes = 0
         self.vote_vector = np.zeros((nr_decisions))
         self.nr_decisions = nr_decisions
         self.quadratic = quadratic
-        self.preference = [x/100 for x in random.sample(range(-100,100), nr_decisions)]
+        self.preference = [x/100 for x in random.sample(range(-100, 100), nr_decisions)]
         self.threshold = 0.1
         self.utility = 0
 
@@ -25,16 +25,15 @@ class voter_sv(object):
             self.vote_vector[d] = self.how_many_votes_bsv(d)
             self.votes = self.votes - abs(self.vote_vector[d])
 
-    
     def how_many_votes_asv(self, decision_index):
         remaining_decisions = self.nr_decisions - decision_index
         pref = self.preference[decision_index]
 
         if self.quadratic:
-            multiplier = np.sqrt( abs(pref)/0.5 )
+            multiplier = np.sqrt(abs(pref)/0.5)
         else:
             multiplier = abs(pref)/0.5 
-        votes_cast = int(round( multiplier* ( ( self.votes + remaining_decisions ) / remaining_decisions ) ) )
+        votes_cast = int(round(multiplier*((self.votes + remaining_decisions) / remaining_decisions)))
 
         if votes_cast > self.votes:
             votes_cast = self.votes
@@ -52,10 +51,10 @@ class voter_sv(object):
         pref = self.preference[decision_index]
 
         if self.quadratic:
-            multiplier = np.sqrt( abs(pref)/0.5 )
+            multiplier = np.sqrt(abs(pref)/0.5)
         else:
             multiplier = abs(pref)/0.5 
-        votes_cast = int(round( multiplier* ( ( self.votes + remaining_decisions ) / remaining_decisions ) ) )
+        votes_cast = int(round(multiplier*((self.votes + remaining_decisions) / remaining_decisions)))
 
         if votes_cast < 1:
             votes_cast = 1

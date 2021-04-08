@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
+
 def ret_shares(num_voters):
     votes = np.random.uniform(0.5, 1, num_voters)
     votes = votes/sum(votes)
@@ -14,13 +15,14 @@ def ret_shares(num_voters):
     if sum(votes) != 100:
         remain_votes = 100 - sum(votes)
 
-        for i in range(remain_votes):
-            rand_voter = np.random.randint(0,num_voters)
+        for j in range(remain_votes):
+            rand_voter = np.random.randint(0, num_voters)
             votes[rand_voter] += 1
 
     return votes
 
-def cv(n_voters, quadratic = False):
+
+def cv(n_voters, quadratic=False):
     # n_voters = 2
     n_candidates = 5
 
@@ -37,7 +39,7 @@ def cv(n_voters, quadratic = False):
     for i, v in enumerate(voters):
         votes[i] = v.vote()
     
-    max_val = np.argmax(votes, axis = 0)
+    max_val = np.argmax(votes, axis=0)
     for i in range(n_candidates):
         decisions[:, i][max_val[i]] = 1
 
@@ -51,7 +53,8 @@ def cv(n_voters, quadratic = False):
 
     return mean, ste
 
-def asv(n_v, n_d, quadratic = False):
+
+def asv(n_v, n_d, quadratic=False):
     n_d = 12
 
     votes = np.zeros((n_v, n_d))
@@ -62,8 +65,8 @@ def asv(n_v, n_d, quadratic = False):
         sv.vote_asv()
         votes[i] = sv.get_vote_vector()
 
-    final_decision = np.sum(votes,axis = 0)
-    final_decision[final_decision> 0] = 1
+    final_decision = np.sum(votes, axis=0)
+    final_decision[final_decision > 0] = 1
     final_decision[final_decision < 0] = 0
 
     utilities = []
@@ -75,7 +78,8 @@ def asv(n_v, n_d, quadratic = False):
 
     return mean, ste
 
-def bsv(n_v, n_d, quadratic = False):
+
+def bsv(n_v, n_d, quadratic=False):
     n_d = 12
 
     votes = np.zeros((n_v, n_d))
@@ -86,8 +90,8 @@ def bsv(n_v, n_d, quadratic = False):
         sv.vote_bsv()
         votes[i] = sv.get_vote_vector()
 
-    final_decision = np.sum(votes,axis = 0)
-    final_decision[final_decision> 0] = 1
+    final_decision = np.sum(votes, axis=0)
+    final_decision[final_decision > 0] = 1
     final_decision[final_decision < 0] = 0
 
     utilities = []
@@ -110,13 +114,14 @@ def plot_figure(mean_map, ste):
     se_bsv = [ste[4], ste[5]]
 
     # Set up plot
-    x=np.arange(0,2)
+    x = np.arange(0, 2)
     legend = [Line2D([0], [0], color='lightsalmon', lw='3', label='No QV'),
               Line2D([0], [0], color='lightskyblue', lw='3', label='With QV'),
               Line2D([0], [0], marker='o', color='w', label='Mean',
                      markerfacecolor='black', markersize=7)]
 
-    fig, (ax1, ax2, ax3) = plt.subplots(1,3, sharey=True)
+    # noinspection PyTypeChecker
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, sharey=True)
     fig.suptitle("Mean utility with SE")
 
     # First subplot
@@ -185,7 +190,6 @@ if __name__ == "__main__":
                 ste_map["cvq"].append(cs)
                 ste_map["asvq"].append(As)
                 ste_map["bsvq"].append(bs)
-    
 
     mean_map = {x: np.mean(mean_map[x]) for x in mean_map}
     ste_map = {x: np.mean(ste_map[x]) for x in ste_map}
