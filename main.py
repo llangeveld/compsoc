@@ -196,6 +196,6 @@ if __name__ == "__main__":
 
     mean = list(mean_map.values())
     ste = list(ste_map.values())
-    ste = [x + mean[i] for i, x in enumerate(mean)]
+    # ste = [x + mean[i] for i, x in enumerate(mean)]
 
     plot_figure(mean_map, ste)
